@@ -1,6 +1,8 @@
 import { createContext, useContext, useEffect, useState } from "react"
 import { useUsersDatabase } from "../../database/useUsersDatabase";
 import { ReloadInstructions } from "react-native/Libraries/NewAppScreen";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ActivityIndicator, Text, View } from "react-native";
 
 const AuthContext = createContext({});
 
@@ -22,10 +24,30 @@ export function AuthProvider({ children }) {
 
     const {authUser} = useUsersDatabase();
 
+    useEffect(()=> {
+        const loadStorageData = async () => {
+            const storageUser = await AsyncStorage.getItem("@payment:user");
+
+            if (storageUser) {
+                setUser({
+                    autenticated: true,
+                    user: JSON.parse(storageUser),
+                    role: JSON.parse(storageUser).role,
+                });
+            } else {
+                setUser({
+                    autenticated: false,
+                    user: null,
+                    role: null,
+                });
+            }
+        };
+        loadStorageData();
+    }, []);
+
     const signIn = async ({ email, password }) => {
 
         const response = await authUser({ email, password });
-        console.log(response);
 
         if (!response){
             setUser({
@@ -35,6 +57,8 @@ export function AuthProvider({ children }) {
             });
             throw new Error("Usuário ou senha inválidos");
         }
+
+        await AsyncStorage.setItem("@payment:user", JSON.stringify(response));
         
 
         setUser({
@@ -46,13 +70,19 @@ export function AuthProvider({ children }) {
     };
 
     const signOut = async () => {
+        await AsyncStorage.removeItem("@payment:user");
         setUser({});
     }
 
-    useEffect(() => {
-        console.log('AuthProvider: ', user);
-    }, [user]);
 
+    if (user?.autenticated === null) {
+        return (
+            <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
+                <Text style={{fontSize:25, marginTop: 15}}>Carregado Dados do Usuário</Text>
+                <ActivityIndicator size={30} color="#202020" />
+            </View>
+        );
+    }
 
     return (
         <AuthContext.Provider value={{ user, signIn, signOut }}>

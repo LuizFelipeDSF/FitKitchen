@@ -5,7 +5,7 @@ export function useUsersDatabase() {
     const databse = useSQLiteContext();
 
     async function authUser({ email, password }) {
-        console.log("authUser email: ", email, " - password", password);
+        //console.log("authUser email: ", email, " - password", password);
 
         try {
             const result = await databse.getFirstAsync(`
