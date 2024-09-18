@@ -1,7 +1,7 @@
 export async function initializeDatabase(database) {
    try {
     
-    await database.exceAsync(`
+    await database.execAsync(`
         
     DROP TABLE IF EXISTS users;
 
@@ -11,8 +11,8 @@ export async function initializeDatabase(database) {
      email TEXT NOT NULL UNIQUE,
      senha TEXT NOT NULL DEFAULT 'A123456!',
      role TEXT NOT NULL DEFAULT 'USER',
-     create_at DATE DEFAULT CURRENT_TIMESTAMP,
-     update_at DATE,
+     created_at DATE DEFAULT CURRENT_TIMESTAMP,
+     updated_at DATE
     );
     
     INSERT OR REPLACE INTO users (nome, email, senha, role) VALUES ('Super', 'super@email.com', 'A123456!', 'SUPER');
