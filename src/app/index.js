@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { BackHandler, Button, StyleSheet, Text, View } from 'react-native';
 import { useAuth } from '../hooks/Auth';
 import { router } from 'expo-router';
 
@@ -12,7 +12,7 @@ export default function App() {
       await signIn({ email: "super@email.com", password: "Super123!" });
       router.replace("/");
     } catch (error) {
-      console.log(e);
+      console.log(error);
     }
   }
 
@@ -36,6 +36,9 @@ export default function App() {
 
       <StatusBar style="auto" />
 
+      <Button title="Sobre" onPress={() => router.push("/about")} />
+
+      <Button title="Sair do Aplicativo" onPress={() => BackHandler.exitApp()} />  
 
     </View>
   );
@@ -43,6 +46,7 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
+    gap: 15,
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
