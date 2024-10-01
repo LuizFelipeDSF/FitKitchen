@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View,} from "react-native";
 import PagerView from "react-native-pager-view";
 
 export function Banner() {
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 40,
-        fontFamily: 'bold_italic',
+        fontFamily: 'italic',
         color: '#8da59f',
     },
 });

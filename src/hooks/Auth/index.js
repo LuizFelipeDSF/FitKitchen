@@ -68,7 +68,7 @@ export function AuthProvider({ children }) {
         });
 
     };
-
+    
     const signOut = async () => {
         await AsyncStorage.removeItem("@payment:user");
         setUser({});
