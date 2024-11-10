@@ -37,9 +37,9 @@ export default function App() {
           <TextInput placeholder='E-mail' value={email} onChangeText={setEmail} style={styles.emailInput} />
         </View>
         <View style={styles.inputsenha}>
-          <Ionicons name="lock-closed" size={25} color='#d1e8d6' />
+          <Ionicons name="lock-closed" size={25} color='#86af95' />
           <TextInput placeholder='Senha' value={password} onChangeText={setPassword} secureTextEntry={passwordVisibility} style={styles.emailInput} />
-          <Ionicons name={passwordVisibility ? "eye-off-outline" : "eye-outline"} size={20} color='black' onPress={tooglePasswordVisibility} />
+          <Ionicons name={passwordVisibility ? "eye-off-outline" : "eye-outline"} size={20} color='#86af95' onPress={tooglePasswordVisibility} />
         </View>
       </View>
 
@@ -55,12 +55,12 @@ export default function App() {
             flex: 1, justifyContent: 'space-between', flexDirection: 'column', alignItems: 'center', borderTopStartRadius: 500,
             borderTopEndRadius: 500, backgroundColor: '#8eb69b', width: 550, textAlign: 'center', paddingTop: 60
           }}>
-            <TouchableOpacity style={{ height: 100, width: 200, justifyContent: 'center', textAlign: 'start', alignItems: 'center', borderRadius: 25, paddingBottom: 50, paddingTop: 0 }} onPress={() => router.push("/about")}>
+            <TouchableOpacity style={{ height: 95, width: 200, justifyContent: 'center', textAlign: 'start', alignItems: 'center', borderRadius: 25, paddingBottom: 50, paddingTop: 0 }} onPress={() => router.push("/about")}>
               <Text style={{ color: '#1638', fontFamily: 'regular', fontSize: 40 }}>Sobre</Text>
             </TouchableOpacity>
 
             <View style={{
-              height: 100, width: 170, flex: 1, justifyContent: 'space-around', flexDirection: 'column', alignItems: 'center', borderTopStartRadius: 250,
+              height: 100, width: 250, flex: 1, justifyContent: 'space-around', flexDirection: 'column', alignItems: 'center', borderTopStartRadius: 250,
               borderTopEndRadius: 250, backgroundColor: '#75b088', textAlign: 'center',
             }}>
               <TouchableOpacity style={{ justifyContent: 'center', textAlign: 'center', alignItems: 'center', paddingBottom: 0 }} onPress={() => BackHandler.exitApp()}>
@@ -124,10 +124,11 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 50,
-    marginTop: 50,
+    marginTop: 10,
     marginBottom: 100,
     fontFamily: 'light',
-    color: '#86af95'
+    color: '#86af95',
+    paddingTop: 0,
   },
   botoes: {
     gap: 50,
