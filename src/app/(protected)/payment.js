@@ -1,11 +1,12 @@
-import { router } from "expo-router";
 import { z } from 'zod';
+import { createPayment, usePaymentsDatabase } from "../../database/usePaymentsDatabase";
 import { Picker } from '@react-native-picker/picker';
 import { useEffect, useRef, useState } from "react";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Ionicons } from '@expo/vector-icons';
 import { Button, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, View } from "react-native";
-import { useAuth, userAuth } from "../../hooks/Auth/index";
+import { useAuth } from "../../hooks/Auth/index";
+import { useUsersDatabase } from "../../database/useUsersDatabase"; 
 
 const paymentSchema = z.object({
   valor_pago: z.number().gt(0),
@@ -17,129 +18,35 @@ const paymentSchema = z.object({
 export default function Payment() {
 
   const [valor, setValor] = useState("0,00");
-  const [sugestoes, setSugestoes] = useState([
-    {
-      "id": 1,
-      "nome": "Fanechka Dudmarsh"
-    }, {
-      "id": 2,
-      "nome": "Titos Sandbatch"
-    }, {
-      "id": 3,
-      "nome": "Baryram Churchyard"
-    }, {
-      "id": 4,
-      "nome": "Lowell Wiggins"
-    }, {
-      "id": 5,
-      "nome": "Juan Elderkin"
-    }, {
-      "id": 6,
-      "nome": "Seka McCathie"
-    }, {
-      "id": 7,
-      "nome": "Abagail Heatly"
-    }, {
-      "id": 8,
-      "nome": "Terrie Fer"
-    }, {
-      "id": 9,
-      "nome": "Pascale Earl"
-    }, {
-      "id": 10,
-      "nome": "Jerrie Mathieu"
-    }, {
-      "id": 11,
-      "nome": "Dannel Adamczewski"
-    }, {
-      "id": 12,
-      "nome": "Emmery Bussons"
-    }, {
-      "id": 13,
-      "nome": "Tomasina Delagnes"
-    }, {
-      "id": 14,
-      "nome": "Isabelita Brunotti"
-    }, {
-      "id": 15,
-      "nome": "Janette Petrecz"
-    }, {
-      "id": 16,
-      "nome": "Melli Huetson"
-    }, {
-      "id": 17,
-      "nome": "Blaine Goodluck"
-    }, {
-      "id": 18,
-      "nome": "Austin Daft"
-    }, {
-      "id": 19,
-      "nome": "Ax Kezor"
-    }, {
-      "id": 20,
-      "nome": "Mildrid Chesterton"
-    }, {
-      "id": 21,
-      "nome": "Barthel Braime"
-    }, {
-      "id": 22,
-      "nome": "Reggie Pottiphar"
-    }, {
-      "id": 23,
-      "nome": "Conney Huggard"
-    }, {
-      "id": 24,
-      "nome": "Baxy Girton"
-    }, {
-      "id": 25,
-      "nome": "Dillon Perico"
-    }, {
-      "id": 26,
-      "nome": "Tomasina Rampage"
-    }, {
-      "id": 27,
-      "nome": "Ag Hourston"
-    }, {
-      "id": 28,
-      "nome": "Chloe Peacher"
-    }, {
-      "id": 29,
-      "nome": "Thacher Vayro"
-    }, {
-      "id": 30,
-      "nome": "Rita Heaps"
-    }, {
-      "id": 31,
-      "nome": "Beverlee Sykes"
-    }, {
-      "id": 32,
-      "nome": "Lianna Aldridge"
-    }, {
-      "id": 33,
-      "nome": "Granville Baglan"
-    }, {
-      "id": 34,
-      "nome": "Merry Dutnall"
-    }, {
-      "id": 35,
-      "nome": "Gibby Spafford"
-    }
-  ]);
+  const [sugestoes, setSugestoes] = useState([]);
   const [id, setId] = useState(1);
   const [data, setData] = useState(new Date());
   const [viewCalendar, setViewCalendar] = useState(false);
   const [observacao, setObsetvacao] = useState("");
   const { user } = useAuth();
+  const { createPayment } = usePaymentsDatabase();
+  const { getAllUsers } = useUsersDatabase();
 
   const handleCalendar = (event, selectedDate) => {
     setViewCalendar(false);
     setData(selectedDate);
-  }
+  };
+
   const valueRef = useRef();
 
   useEffect(() => {
-    valueRef.current?.focus();
-  }, [])
+    (async () => {
+      valueRef.current?.focus();
+      try {
+        const users = await getAllUsers();
+        setSugestoes(users);
+        setId(users[0].id);
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+  }, []);
+
 
   const handleChangeValor = (value) => {
     try {
@@ -174,6 +81,7 @@ export default function Payment() {
   };
 
   const handleSubmit = async () => {
+    console.log("handleSubmit called"); // Log inicial
     const payment = {
       user_id: id,
       user_cadastro: Number(user.user.id),
@@ -181,14 +89,24 @@ export default function Payment() {
       data_pagamento: data,
       observacao,
     };
+    console.log("Payment object:", payment); // Log do objeto antes da validação
 
     try {
       const result = await paymentSchema.parseAsync(payment);
-      console.log(result);
+      const { insertedID } = await createPayment(payment);
+      console.log(insertedID);
+      setValor("0,00");
+      setId(sugestoes[0].id);
+      setData(new Date());
+      setObsetvacao("");
+      valueRef?.current?.focus();
+
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
+
+
 
 
   return (

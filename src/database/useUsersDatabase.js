@@ -2,13 +2,12 @@ import { useSQLiteContext } from "expo-sqlite";
 
 export function useUsersDatabase() {
 
-    const databse = useSQLiteContext();
+    const database = useSQLiteContext();
 
     async function authUser({ email, password }) {
         //console.log("authUser email: ", email, " - password", password);
-
         try {
-            const result = await databse.getFirstAsync(`
+            const result = await database.getFirstAsync(`
             SELECT id, nome, email role FROM users WHERE emaiL='${email}' and senha='${password}'
         `);
 
@@ -21,7 +20,22 @@ export function useUsersDatabase() {
 
     }
 
+    async function getAllUsers() {
+        try {
+            const result = await database.getAllAsync(`
+            SELECT id, nome, email, role FROM users
+        `);
+
+            return result;
+
+        } catch (error) {
+            console.error("useUsersDatabase getAlluser error: ", error);
+            throw error;
+        }
+    }
+
     return {
-        authUser,
+        authUser, getAllUsers
     };
 }
+

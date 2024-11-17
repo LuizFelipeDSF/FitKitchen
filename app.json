@@ -5,10 +5,10 @@
     "scheme": "modelo_app-3-bimestre_3",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./src/assets/icon.png",
+    "icon": "./src/assets/Chef_icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./src/assets/splash.png",
+      "image": "./src/assets/Chef_splash.jpg",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
