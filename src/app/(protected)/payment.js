@@ -4,14 +4,16 @@ import { Picker } from '@react-native-picker/picker';
 import { useEffect, useRef, useState } from "react";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Ionicons } from '@expo/vector-icons';
-import { Button, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, View } from "react-native";
+import { Alert, Button, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, View } from "react-native";
 import { useAuth } from "../../hooks/Auth/index";
-import { useUsersDatabase } from "../../database/useUsersDatabase"; 
+import { useUsersDatabase } from "../../database/useUsersDatabase";
+import { router } from 'expo-router';
 
 const paymentSchema = z.object({
   valor_pago: z.number().gt(0),
   user_cadastro: z.number().int().positive(),
   data_pagamento: z.date(),
+  numero_recibo: z.string(),
   observacao: z.string(),
 })
 
@@ -23,6 +25,8 @@ export default function Payment() {
   const [data, setData] = useState(new Date());
   const [viewCalendar, setViewCalendar] = useState(false);
   const [observacao, setObsetvacao] = useState("");
+  const [numeroRecibo, setNumeroRecibo] = useState("");
+  const valueRef = useRef();
   const { user } = useAuth();
   const { createPayment } = usePaymentsDatabase();
   const { getAllUsers } = useUsersDatabase();
@@ -32,17 +36,18 @@ export default function Payment() {
     setData(selectedDate);
   };
 
-  const valueRef = useRef();
 
   useEffect(() => {
     (async () => {
-      valueRef.current?.focus();
       try {
         const users = await getAllUsers();
+        if (users.length === 0) {
+          throw new Error("Nenhum usuário encontrado.");
+        }
         setSugestoes(users);
         setId(users[0].id);
       } catch (error) {
-        console.error(error);
+        console.error("Erro ao buscar usuários:", error.message);
       }
     })();
   }, []);
@@ -81,33 +86,37 @@ export default function Payment() {
   };
 
   const handleSubmit = async () => {
+    if (!id) {
+      Alert.alert("Erro", "Selecione um usuário válido.");
+      return;
+    }
     console.log("handleSubmit called"); // Log inicial
     const payment = {
       user_id: id,
       user_cadastro: Number(user.user.id),
       valor_pago: convertValue(valor) > 0 ? convertValue(valor) : 0.01,
       data_pagamento: data,
+      numero_recibo: numeroRecibo,
       observacao,
     };
+
     console.log("Payment object:", payment); // Log do objeto antes da validação
 
     try {
       const result = await paymentSchema.parseAsync(payment);
       const { insertedID } = await createPayment(payment);
-      console.log(insertedID);
+      console.log("Inserted ID:", insertedID);
       setValor("0,00");
       setId(sugestoes[0].id);
       setData(new Date());
       setObsetvacao("");
+      setNumeroRecibo("");
       valueRef?.current?.focus();
-
     } catch (error) {
+      Alert.alert("Erro", `Erro ao inserir pagamento: ${error.message}`);
       console.error(error);
     }
   };
-
-
-
 
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
@@ -117,6 +126,12 @@ export default function Payment() {
           <Ionicons name="wallet-sharp" size={40} color={'#202020'} />
           <TextInput placeholder="Valor" keyboardType="decimal-pad" style={styles.inputValor} value={valor} onChangeText={(newValue) => handleChangeValor(newValue)} ref={valueRef} />
         </View>
+
+        <View style={styles.inputView}>
+          <Ionicons name="pencil" size={40} color={'#202020'} />
+          <TextInput placeholder="Número do Recibo" keyboardType="decimal-pad" style={styles.inputValor} value={numeroRecibo} onChangeText={setNumeroRecibo} />
+        </View>
+
         <View style={styles.inputView}>
           <Picker selectedValue={id} onValueChange={(itemValue, index) => { setId(itemValue) }} style={{ width: "100%" }}>
             {sugestoes?.map((item) => {
