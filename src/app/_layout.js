@@ -9,10 +9,10 @@ const StackLayout = () => {
     const { user } = useAuth();
 
     useEffect(() => {
-        if (!user?.autenticated) {
+        if (!user?.authenticated) {
           router.replace('signin')
         } else {
-          router.replace("(protected)");
+          router.replace("(protected)/list");
         }
 
     }, [user]);
@@ -28,8 +28,6 @@ const StackLayout = () => {
 
 
 export default function Layout() {
-
-
     return (
         <AppProvider><StackLayout /></AppProvider>
     );
