@@ -2,41 +2,57 @@ import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import { usePaymentsDatabase } from "../../database/usePaymentsDatabase";
 import { FlashList } from "@shopify/flash-list";
+import { formatDateBrazilian } from "../../utils/formatData";
+import { formatCurrencyBRL } from "../../utils/formatCurrent";
 
 export default function List() {
   const [data, setData] = useState([])
   const { getPayments } = usePaymentsDatabase()
+  const [page, setPage] = useState(0) //Qual página o sistema já carregou
+  const [loading, setLoading] = useState(true) //Se está carregando ou não
+  const [hasMore, setHasMore] = useState(true) //Se tem mais dados para carregar
 
   async function fetchData() {
-    const payments = await getPayments();
-    setData(payments)
+    if (hasMore === false) return;
+
+    setPage(page + 1)
+
+    const payments = await getPayments(page);
+
+    if (payments.length < 5) setHasMore(false)
+
+    setData([...data, ...payments])
+    setLoading(false)
   }
 
   useEffect(() => {
+    setPage(0)
     fetchData()
   }, [])
 
   renderItem = ({ item }) => (
-    <View style={{ flexDirection: "row", margin: 5 }}>
-      <View style={{ flex: 1}}>
-        <Text style={{}}>{item.nome}</Text>
-        <View style={{flexDirection: "row", justifyContent: "space-around"}}>
-          <Text>{item.data_pagamento}</Text>
-          <Text>{item.numero_recebido}</Text>
+    <View style={{ flexDirection: "row", margin: 5, margin: 10, padding: 3, backgroundColor: "#ffff", height: 100 }}>
+      <View style={{ flex: 1, gap: 5,te }}>
+        <Text style={{ fontFamily: "bold", fontSize: 18, textTransform: "uppercase" }}>{item.nome}</Text>
+        <View style={{ flexDirection: "row", gap: 10 }}>
+          <Text style={{ fontFamily: "regular" }}>{formatDateBrazilian(item.data_pagamento || new Date())}</Text>
+          <Text>{item.numero_recibo}</Text>
         </View>
       </View>
-      <View><Text>{item.valor_pago}</Text></View>
+      <View><Text style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>{formatCurrencyBRL(item.valor_pago || 0)}</Text></View>
     </View>
   );
 
   return (
     <View style={{ flex: 1 }}>
-      <Text>Listagem</Text>
       <View style={{ flex: 1 }}>
         <FlashList
           data={data}
           renderItem={renderItem}
-          estimatedItemSize={200}
+          estimatedItemSize={50}
+          onEndReached={fetchData}
+          onEndReachedThreshold={0.8}
+          keyExtractor={(item) => item.id.toString()}
         />
       </View>
     </View>

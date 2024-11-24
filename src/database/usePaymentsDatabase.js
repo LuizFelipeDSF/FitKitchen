@@ -35,9 +35,9 @@ export function usePaymentsDatabase() {
         }
     }
 
-    async function getPayments() {
+    async function getPayments(page) {
         try {
-            const payments = await database.getAllAsync("SELECT p.*, u.nome FROM payments p, users u WHERE u.id = p.user_id");
+            const payments = await database.getAllAsync(`SELECT p.*, u.nome FROM payments p, users u WHERE u.id = p.user_id ORDER BY data_pagamento DESC LIMIT 10 OFFSET ${page * 10}`);
             return payments;
         } catch (error) {
             console.log(error)

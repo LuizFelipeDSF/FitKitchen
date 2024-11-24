@@ -63,6 +63,14 @@ export default function App() {
               height: 100, width: 250, flex: 1, justifyContent: 'space-around', flexDirection: 'column', alignItems: 'center', borderTopStartRadius: 250,
               borderTopEndRadius: 250, backgroundColor: '#75b088', textAlign: 'center',
             }}>
+              <TouchableOpacity style={{ justifyContent: 'center', textAlign: 'center', alignItems: 'center', paddingBottom: 0 }} onPress={() => router.push("/maintenance")}>
+                <Text style={{ color: '#051f20', fontFamily: 'regular', fontSize: 35 }}>Informações Armazenadas</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={{
+              height: 100, width: 250, flex: 1, justifyContent: 'space-around', flexDirection: 'column', alignItems: 'center', borderTopStartRadius: 250,
+              borderTopEndRadius: 250, backgroundColor: '#75b088', textAlign: 'center',
+            }}>
               <TouchableOpacity style={{ justifyContent: 'center', textAlign: 'center', alignItems: 'center', paddingBottom: 0 }} onPress={() => BackHandler.exitApp()}>
                 <Text style={{ color: '#051f20', fontFamily: 'regular', fontSize: 35 }}>Sair</Text>
               </TouchableOpacity>

@@ -19,7 +19,7 @@ function CustomDrawerContent(props) {
         {user?.user?.nome ? (
           <Text style={{ textAlign: 'center', fontSize: 35, fontFamily: 'regular', color: '#8da59f', paddingTop: 30 }}>{user.user.nome}</Text>
         ) : (
-          <Text style={{ textAlign: 'center', fontSize: 25, fontFamily: 'regular', color: '#8da59f', paddingTop: 30  }}>Usuário não identificado</Text>
+          <Text style={{ textAlign: 'center', fontSize: 25, fontFamily: 'regular', color: '#8da59f', paddingTop: 30 }}>Usuário não identificado</Text>
         )}
       </View>
 
