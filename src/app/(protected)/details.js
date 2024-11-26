@@ -4,11 +4,13 @@ import { usePaymentsDatabase } from "../../database/usePaymentsDatabase";
 import { useEffect, useState } from "react";
 import { formatDateToBrazilian } from "../../utils/formatData";
 import { formatCurrencyBRL } from "../../utils/formatCurrent";
+import { usePickImage } from "../../utils/pickImage";
 
 export default function Details() {
     const { id } = useLocalSearchParams();
     const { getPayment } = usePaymentsDatabase();
     const [payment, setPayment] = useState({});
+    const { pickImage } = usePickImage();
 
     const fetchData = async () => {
         try {
@@ -24,26 +26,35 @@ export default function Details() {
         fetchData()
     }, [])
 
+    const handlePickerImage = async () => {
+        try {
+            const image = await pickImage();
+            console.log("Image: ", image)
+        } catch (error) {
+            console.log("handlePickImage: ", error);
+            Alert.alert("Erro ao buscar imagem");
+        }
+    }
+
     return (
         <View style={styles.container}>
             <View>
-                <Text style = {styles.text}>Nome: {payment?.nome}</Text>
-                <Text style = {styles.text}>Data do Pagamento: {formatDateToBrazilian(payment?.data_pagamento)}</Text>
-                <Text style = {styles.text}>Num Recibo: {payment?.numero_recibo}</Text>
-                <Text style = {styles.text}>Valor Pago: {formatCurrencyBRL(Number(payment?.valor_pago) || 0)}</Text>
-                <Text style = {styles.text}>Observação: {payment?.observacao}</Text>
+                <Text style={styles.text}>Nome: {payment?.nome}</Text>
+                <Text style={styles.text}>Data do Pagamento: {formatDateToBrazilian(payment?.data_pagamento)}</Text>
+                <Text style={styles.text}>Num Recibo: {payment?.numero_recibo}</Text>
+                <Text style={styles.text}>Valor Pago: {formatCurrencyBRL(Number(payment?.valor_pago) || 0)}</Text>
+                <Text style={styles.text}>Observação: {payment?.observacao}</Text>
             </View>
             <View style={styles.contentImage}>
                 {
                     !!payment?.imagem ?
-                    <Image source={{url: payment?.imagem}} style={{width: 200, height: 200}} />
-                    :  <Text>Não há imagem cadastradas</Text>
+                        <Image source={{ url: payment?.imagem }} style={{ width: 200, height: 200 }} />
+                        : <Text>Não há imagem cadastradas</Text>
                 }
             </View>
             <View style={styles.containerButtons}>
-                <Button title="Editar" disabled />
-                <Button title="DEFINIR IMAGEM" />
-                <Button title="IMAGEM" />
+                <Button title="IMAGEM" onPress={handlePickerImage} />
+                <Button title="REMOVER IMAGEM" />
                 <Button title="VOLTAR" onPress={() => router.push("list")} />
             </View>
         </View>
@@ -66,7 +77,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center"
     },
-    text:{
+    text: {
         fontFamily: "bold"
     },
 });
