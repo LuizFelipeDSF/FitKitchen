@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { usePaymentsDatabase } from "../../database/usePaymentsDatabase";
 import { FlashList } from "@shopify/flash-list";
-import { formatDateBrazilian } from "../../utils/formatData";
+import {formatDateToBrazilian } from "../../utils/formatData";
 import { formatCurrencyBRL } from "../../utils/formatCurrent";
+import { router } from "expo-router";
 
 export default function List() {
   const [data, setData] = useState([])
@@ -31,16 +32,18 @@ export default function List() {
   }, [])
 
   renderItem = ({ item }) => (
-    <View style={{ flexDirection: "row", margin: 5, margin: 10, padding: 3, backgroundColor: "#ffff", height: 100 }}>
-      <View style={{ flex: 1, gap: 5,te }}>
-        <Text style={{ fontFamily: "bold", fontSize: 18, textTransform: "uppercase" }}>{item.nome}</Text>
-        <View style={{ flexDirection: "row", gap: 10 }}>
-          <Text style={{ fontFamily: "regular" }}>{formatDateBrazilian(item.data_pagamento || new Date())}</Text>
-          <Text>{item.numero_recibo}</Text>
+    <TouchableOpacity style={{flex: 1}} onPress={() => router.push({ pathname: "details", params: { id: item.id } })}>
+      <View style={{ flexDirection: "row", margin: 5, margin: 10, padding: 3, backgroundColor: "#ffff", height: 100 }}>
+        <View style={{ flex: 1, gap: 5 }}>
+          <Text style={{ fontFamily: "bold", fontSize: 18, textTransform: "uppercase" }}>{item.nome}</Text>
+          <View style={{ flexDirection: "row", gap: 10 }}>
+            <Text style={{ fontFamily: "regular" }}>{formatDateToBrazilian(item.data_pagamento || new Date())}</Text>
+            <Text>{item.numero_recibo}</Text>
+          </View>
         </View>
+        <View><Text style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>{formatCurrencyBRL(item.valor_pago || 0)}</Text></View>
       </View>
-      <View><Text style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>{formatCurrencyBRL(item.valor_pago || 0)}</Text></View>
-    </View>
+    </TouchableOpacity>
   );
 
   return (

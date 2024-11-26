@@ -14,6 +14,7 @@ export async function initializeDatabase(database) {
            data_pagamento DATE,
            senha TEXT NOT NULL DEFAULT 'A123456!',
            role TEXT NOT NULL DEFAULT 'USER',
+           imagem TEXT DEFAULT "",
            created_at DATE DEFAULT CURRENT_TIMESTAMP,
            updated_at DATE
          );

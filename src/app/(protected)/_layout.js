@@ -46,6 +46,7 @@ const DrawerLayout = () => (
       <Drawer.Screen name="index" options={{ drawerLabel: "Início", headerTitle: "Início", drawerIcon: () => <Ionicons name="home" size={30} color="#8da59f" /> }} />
       <Drawer.Screen name="list" options={{ drawerLabel: "Receitas", headerTitle: "Receitas", drawerIcon: () => <Ionicons name="nutrition" size={30} color="#d1e8d6" /> }} />
       <Drawer.Screen name="payment" options={{ drawerLabel: "Pagamentos", headerTitle: "Pagamentos", drawerIcon: () => <Ionicons name="cash-outline" size={30} color="#436850" /> }} />
+      <Drawer.Screen name="details" options={{headerTitle: "Detalhes", unmountOnBlur: true, drawerItemStyle: {display: "none"},}} />
     </Drawer>
   </GestureHandlerRootView>
 );
