@@ -10,11 +10,11 @@ export async function initializeDatabase(database) {
          CREATE TABLE IF NOT EXISTS users (
            id INTEGER PRIMARY KEY AUTOINCREMENT,
            nome TEXT,
+           curso TEXT,
            email TEXT NOT NULL UNIQUE,
            data_pagamento DATE,
            senha TEXT NOT NULL DEFAULT 'A123456!',
            role TEXT NOT NULL DEFAULT 'USER',
-           imagem TEXT DEFAULT "",
            created_at DATE DEFAULT CURRENT_TIMESTAMP,
            updated_at DATE
          );
@@ -27,6 +27,7 @@ export async function initializeDatabase(database) {
             data_pagamento DATE NOT NULL,
             numero_recibo TEXT NOT NULL,
             observacao TEXT,
+            imagem TEXT DEFAULT "",
             created_at DATE DEFAULT CURRENT_TIMESTAMP,
             updated_at DATE,
             FOREIGN KEY (user_id) REFERENCES users(id),

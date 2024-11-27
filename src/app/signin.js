@@ -27,9 +27,10 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <Image />
-
-      <Text style={styles.title}>Login</Text>
+      <View style={styles.login}>
+        <TouchableOpacity style={{marginBottom: 100, marginLeft: 100}}><Ionicons name='build-sharp' size={30} color={"#8eb69b"} onPress={() => router.push("/maintenance")} /></TouchableOpacity>
+        <Text style={{fontSize: 60,marginTop: 10,marginBottom: 80,fontFamily: 'light',color: '#86af95',}}>Login</Text>
+      </View>
 
       <View style={styles.inserts}>
         <View style={styles.inputemail}>
@@ -59,14 +60,6 @@ export default function App() {
               <Text style={{ color: '#1638', fontFamily: 'regular', fontSize: 40 }}>Sobre</Text>
             </TouchableOpacity>
 
-            <View style={{
-              height: 100, width: 250, flex: 1, justifyContent: 'space-around', flexDirection: 'column', alignItems: 'center', borderTopStartRadius: 250,
-              borderTopEndRadius: 250, backgroundColor: '#75b088', textAlign: 'center',
-            }}>
-              <TouchableOpacity style={{ justifyContent: 'center', textAlign: 'center', alignItems: 'center', paddingBottom: 0 }} onPress={() => router.push("/maintenance")}>
-                <Text style={{ color: '#051f20', fontFamily: 'regular', fontSize: 35 }}>Informações Armazenadas</Text>
-              </TouchableOpacity>
-            </View>
             <View style={{
               height: 100, width: 250, flex: 1, justifyContent: 'space-around', flexDirection: 'column', alignItems: 'center', borderTopStartRadius: 250,
               borderTopEndRadius: 250, backgroundColor: '#75b088', textAlign: 'center',
@@ -137,6 +130,7 @@ const styles = StyleSheet.create({
     fontFamily: 'light',
     color: '#86af95',
     paddingTop: 0,
+    paddingRight: 60,
   },
   botoes: {
     gap: 50,
@@ -151,4 +145,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     margin: 0,
   },
+  login:{
+    paddingTop: 40,
+    width: 600,
+    flexDirection: 'row-reverse',
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+  }
 });
